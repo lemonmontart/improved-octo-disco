@@ -2,12 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import font_manager, rc
-"""
-# 한글 폰트 설정
-font_path = '/Users/admin/Library/Group Containers/UBF8T346G9.Office/FontCache/4/CloudFonts/NanumGothic/29131424179.ttf'
-font_manager.fontManager.addfont(font_path)
-plt.rcParams['font.family'] = font_manager.FontProperties(fname=font_path).get_name()
-"""
+
 # 데이터 로드
 @st.cache_data
 def load_data():
