@@ -84,6 +84,9 @@ if 부모님_나이대:
 # 필터링
 filtered_df = data[filter_conditions]
 
+st.header('필터링된 데이터')
+st.dataframe(filtered_df)
+
 # 시각화 함수 정의
 def plot_data(filtered_df):
     # 부모님을 대신한 경험
