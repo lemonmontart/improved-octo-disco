@@ -3,8 +3,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import font_manager, rc
 
-# 한글 폰트 설정
-font_path = '/NanumGothic/29131424179.ttf'
+# Google Fonts에서 한글 폰트 설정
+@st.cache_data
+def get_font_path():
+    import requests
+    font_url = "https://github.com/google/fonts/raw/main/ofl/nanumgothic/NanumGothic-Regular.ttf"
+    response = requests.get(font_url)
+    font_path = "/tmp/NanumGothic-Regular.ttf"
+    with open(font_path, "wb") as f:
+        f.write(response.content)
+    return font_path
+
+font_path = get_font_path()
 font_manager.fontManager.addfont(font_path)
 plt.rcParams['font.family'] = font_manager.FontProperties(fname=font_path).get_name()
 
