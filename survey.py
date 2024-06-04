@@ -90,7 +90,7 @@ st.dataframe(filtered_df)
 def plot_data(filtered_df):
     def add_percentage(ax, total_count):
         for p in ax.patches:
-            percentage = f'{100 * p.get_height() / total_count:.1f}%'
+            percentage = f'{100 * p.get_height() / total_count:.1f}% ({int(p.get_height())})'
             x = p.get_x() + p.get_width() / 2
             y = p.get_height()
             ax.annotate(percentage, (x, y), ha='center', va='bottom')
