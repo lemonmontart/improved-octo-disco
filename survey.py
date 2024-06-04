@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib import font_manager, rc
+from matplotlib import font_manager
 
 # Google Fonts에서 한글 폰트 설정
 @st.cache_data
@@ -17,7 +17,6 @@ def get_font_path():
 font_path = get_font_path()
 font_manager.fontManager.addfont(font_path)
 plt.rcParams['font.family'] = font_manager.FontProperties(fname=font_path).get_name()
-
 
 # 데이터 로드
 @st.cache_data
@@ -89,11 +88,22 @@ st.dataframe(filtered_df)
 
 # 시각화 함수 정의
 def plot_data(filtered_df):
+    def add_percentage(ax, total_count):
+        for p in ax.patches:
+            percentage = f'{100 * p.get_height() / total_count:.1f}%'
+            x = p.get_x() + p.get_width() / 2
+            y = p.get_height()
+            ax.annotate(percentage, (x, y), ha='center', va='bottom')
+
     # 부모님을 대신한 경험
     st.header('SQ5. 부모님을 대신한 경험')
     experience_columns = ['SQ5_1', 'SQ5_2', 'SQ5_3', 'SQ5_4', 'SQ5_5', 'SQ5_6', 'SQ5_7']
     experience_counts = filtered_df[experience_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(experience_counts)
+    fig, ax = plt.subplots()
+    experience_counts.plot(kind='bar', ax=ax)
+    total_count = experience_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # 부모님 시골 거주 여부
     st.header('Q2. 부모님이 시골에 거주하고 계신가요?')
@@ -108,47 +118,79 @@ def plot_data(filtered_df):
     st.header('Q3. 부모님 연령대')
     parent_age_columns = ['Q3_1', 'Q3_2', 'Q3_3', 'Q3_4', 'Q3_5', 'Q3_6']
     parent_age_counts = filtered_df[parent_age_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(parent_age_counts)
+    fig, ax = plt.subplots()
+    parent_age_counts.plot(kind='bar', ax=ax)
+    total_count = parent_age_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # 부모님의 주 구매처에서 식료품과 생필품을 구매하는 주기
     st.header('Q5. 부모님께서 주 구매처에서 식료품과 생필품을 구매하는 주기')
     purchase_frequency_counts = filtered_df['Q5'].value_counts()
-    st.bar_chart(purchase_frequency_counts)
+    fig, ax = plt.subplots()
+    purchase_frequency_counts.plot(kind='bar', ax=ax)
+    total_count = purchase_frequency_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # 식료품 및 생필품 구매처
     st.header('Q6. 식료품 및 생필품 구매처')
     purchase_location_columns = ['Q6_1', 'Q6_2', 'Q6_3', 'Q6_4', 'Q6_5', 'Q6_6', 'Q6_7']
     purchase_location_counts = filtered_df[purchase_location_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(purchase_location_counts)
+    fig, ax = plt.subplots()
+    purchase_location_counts.plot(kind='bar', ax=ax)
+    total_count = purchase_location_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # 오프라인 구매처까지의 이동 시간
     st.header('Q8. 식자재 및 생필품 오프라인 구매처까지의 이동 시간')
     travel_time_counts = filtered_df['Q8'].value_counts()
-    st.bar_chart(travel_time_counts)
+    fig, ax = plt.subplots()
+    travel_time_counts.plot(kind='bar', ax=ax)
+    total_count = travel_time_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # 보통 구매하는 식료품 종류
     st.header('Q9. 보통 구매하는 식료품 종류')
     food_types_columns = ['Q9_1', 'Q9_2', 'Q9_3', 'Q9_4', 'Q9_5', 'Q9_6', 'Q9_7', 'Q9_8', 'Q9_9', 'Q9_10']
     food_types_counts = filtered_df[food_types_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(food_types_counts)
+    fig, ax = plt.subplots()
+    food_types_counts.plot(kind='bar', ax=ax)
+    total_count = food_types_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # 오프라인 구매를 선호하는 생필품 종류
     st.header('Q10. 오프라인 구매를 선호하는 생필품 종류')
     essential_goods_columns = ['Q10_1', 'Q10_2', 'Q10_3', 'Q10_4', 'Q10_5', 'Q10_6', 'Q10_7']
     essential_goods_counts = filtered_df[essential_goods_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(essential_goods_counts)
+    fig, ax = plt.subplots()
+    essential_goods_counts.plot(kind='bar', ax=ax)
+    total_count = essential_goods_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # 오프라인 매장에서 식자재 및 생필품 구매 시 어려움
     st.header('Q11. 오프라인 매장에서 식자재 및 생필품 구매 시 어려움')
     purchase_difficulty_columns = ['Q11_1', 'Q11_2', 'Q11_3', 'Q11_4', 'Q11_5']
     purchase_difficulty_counts = filtered_df[purchase_difficulty_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(purchase_difficulty_counts)
+    fig, ax = plt.subplots()
+    purchase_difficulty_counts.plot(kind='bar', ax=ax)
+    total_count = purchase_difficulty_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # 시골 거주로 겪는 서비스 절차 및 문제점
     st.header('Q12. 시골 거주로 겪는 서비스 절차 및 문제점')
     rural_issues_columns = ['Q12_1', 'Q12_2', 'Q12_3', 'Q12_4', 'Q12_5', 'Q12_6', 'Q12_7', 'Q12_8']
     rural_issues_counts = filtered_df[rural_issues_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(rural_issues_counts)
+    fig, ax = plt.subplots()
+    rural_issues_counts.plot(kind='bar', ax=ax)
+    total_count = rural_issues_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # 이동형 상점 서비스 사용 의사
     st.header('Q13. 이동형 상점 서비스 사용 의사')
@@ -162,106 +204,186 @@ def plot_data(filtered_df):
     # Q14. 이동형 상점을 이용할 의사가 있다면 그 이유는 무엇입니까?
     st.header('Q14. 이동형 상점을 이용할 의사가 있다면 그 이유는 무엇입니까?')
     q14_counts = filtered_df['Q14'].value_counts()
-    st.bar_chart(q14_counts)
+    fig, ax = plt.subplots()
+    q14_counts.plot(kind='bar', ax=ax)
+    total_count = q14_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q15. 이 이동형 상점 트럭은 얼마나 자주 방문하는 것이 이상적이라고 생각합니까?
     st.header('Q15. 이 이동형 상점 트럭은 얼마나 자주 방문하는 것이 이상적이라고 생각합니까?')
     q15_counts = filtered_df['Q15'].value_counts()
-    st.bar_chart(q15_counts)
+    fig, ax = plt.subplots()
+    q15_counts.plot(kind='bar', ax=ax)
+    total_count = q15_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q16. 귀하의 부모님을 위하여 미스터아빠의 이동형 트럭의 적절한 방문 시간은 언제가 좋을 것 같습니까?
     st.header('Q16. 귀하의 부모님을 위하여 미스터아빠의 이동형 트럭의 적절한 방문 시간은 언제가 좋을 것 같습니까?')
     q16_counts = filtered_df['Q16'].value_counts()
-    st.bar_chart(q16_counts)
+    fig, ax = plt.subplots()
+    q16_counts.plot(kind='bar', ax=ax)
+    total_count = q16_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q17. 이동형 상점이 운영하는데 있어서 부모님을 위해 물건을 구매해 드리는 당신의 구매의사결정에 가장 중요한 것은 무엇이라고 생각하시나요?
     st.header('Q17. 이동형 상점이 운영하는데 있어서 부모님을 위해 물건을 구매해 드리는 당신의 구매의사결정에 가장 중요한 것은 무엇이라고 생각하시나요?')
     q17_counts = filtered_df['Q17'].value_counts()
-    st.bar_chart(q17_counts)
+    fig, ax = plt.subplots()
+    q17_counts.plot(kind='bar', ax=ax)
+    total_count = q17_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q18. 이동형 상점에서 판매하는 제품들의 가격대는 어느 정도가 적합한 것 같습니까?
     st.header('Q18. 이동형 상점에서 판매하는 제품들의 가격대는 어느 정도가 적합한 것 같습니까?')
     q18_counts = filtered_df['Q18'].value_counts()
-    st.bar_chart(q18_counts)
+    fig, ax = plt.subplots()
+    q18_counts.plot(kind='bar', ax=ax)
+    total_count = q18_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q19. [미스터아빠 이동형 상점을 통해 구매 시 관심제품]
     st.header('Q19. 미스터아빠 이동형 상점을 통해 구매 시 관심제품')
     q19_columns = ['Q19_1', 'Q19_2', 'Q19_3', 'Q19_4', 'Q19_5', 'Q19_6', 'Q19_7', 'Q19_8']
     q19_counts = filtered_df[q19_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(q19_counts)
+    fig, ax = plt.subplots()
+    q19_counts.plot(kind='bar', ax=ax)
+    total_count = q19_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q20. 부모님께서 얼마나 자주 병원 혹은 약국 등에 방문하시나요?
     st.header('Q20. 부모님께서 얼마나 자주 병원 혹은 약국 등에 방문하시나요?')
     q20_counts = filtered_df['Q20'].value_counts()
-    st.bar_chart(q20_counts)
+    fig, ax = plt.subplots()
+    q20_counts.plot(kind='bar', ax=ax)
+    total_count = q20_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q21. [구매용의가 높거나 도움이 된다고 평가할 것 같은 제품류]
     st.header('Q21. 구매용의가 높거나 도움이 된다고 평가할 것 같은 제품류')
     q21_columns = ['Q21_1', 'Q21_2', 'Q21_3', 'Q21_4', 'Q21_5', 'Q21_6', 'Q21_7', 'Q21_8', 'Q21_9']
     q21_counts = filtered_df[q21_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(q21_counts)
+    fig, ax = plt.subplots()
+    q21_counts.plot(kind='bar', ax=ax)
+    total_count = q21_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q22. 만약 미스터아빠의 이동형 상점이 어르신들이 건강 문제와 식사 제한 때문에 먹지 못했던 음식을 먹어볼 수 있는 대안을 제공한다면, 부모님께서는 구매하실 의향이 있으실 것 같습니까?
     st.header('Q22. 미스터아빠의 이동형 상점이 어르신들이 건강 문제와 식사 제한 때문에 먹지 못했던 음식을 먹어볼 수 있는 대안을 제공한다면, 부모님께서는 구매하실 의향이 있으실 것 같습니까?')
     q22_counts = filtered_df['Q22'].value_counts()
-    st.bar_chart(q22_counts)
+    fig, ax = plt.subplots()
+    q22_counts.plot(kind='bar', ax=ax)
+    total_count = q22_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q23. [다양하고 건강에 좋은 식재료 및 구매 옵션 제공 시 구매 선호 예상 카테고리]
     st.header('Q23. 다양한 건강 식재료 및 구매 옵션 제공 시 선호 카테고리')
     q23_columns = ['Q23_1', 'Q23_2', 'Q23_3', 'Q23_4', 'Q23_5', 'Q23_6', 'Q23_7']
     q23_counts = filtered_df[q23_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(q23_counts)
+    fig, ax = plt.subplots()
+    q23_counts.plot(kind='bar', ax=ax)
+    total_count = q23_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q24. 미스터아빠의 이동형 상점에서 배달 서비스 제공 시, 부모님께서 맞춤형 배송 서비스에 대해 선호하시는 방식이 무엇입니까?
     st.header('Q24. 미스터아빠의 이동형 상점에서 배달 서비스 제공 시 선호 방식')
     q24_counts = filtered_df['Q24'].value_counts()
-    st.bar_chart(q24_counts)
+    fig, ax = plt.subplots()
+    q24_counts.plot(kind='bar', ax=ax)
+    total_count = q24_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q25. 귀하는 평소 온라인 쇼핑을 자주 이용하십니까?
     st.header('Q25. 평소 온라인 쇼핑을 자주 이용하십니까?')
     q25_counts = filtered_df['Q25'].value_counts()
-    st.bar_chart(q25_counts)
+    fig, ax = plt.subplots()
+    q25_counts.plot(kind='bar', ax=ax)
+    total_count = q25_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q26. 귀하는 얼마나 자주 온라인 쇼핑을 하십니까?
     st.header('Q26. 얼마나 자주 온라인 쇼핑을 하십니까?')
     q26_counts = filtered_df['Q26'].value_counts()
-    st.bar_chart(q26_counts)
+    fig, ax = plt.subplots()
+    q26_counts.plot(kind='bar', ax=ax)
+    total_count = q26_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q27. [식료품 소비 위해 이용하는 온라인 쇼핑몰]
     st.header('Q27. 식료품 소비 위해 이용하는 온라인 쇼핑몰')
     q27_columns = ['Q27_1', 'Q27_2', 'Q27_3', 'Q27_4', 'Q27_5']
     q27_counts = filtered_df[q27_columns].apply(pd.Series.value_counts).fillna(0).sum(axis=1)
-    st.bar_chart(q27_counts)
+    fig, ax = plt.subplots()
+    q27_counts.plot(kind='bar', ax=ax)
+    total_count = q27_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q28. 귀하께서는 미스터아빠의 이동형 상점에서 제품 업데이트를 얼마나 자주 받고 싶으신가요?
     st.header('Q28. 미스터아빠 이동형 상점 제품 업데이트 빈도')
     q28_counts = filtered_df['Q28'].value_counts()
-    st.bar_chart(q28_counts)
+    fig, ax = plt.subplots()
+    q28_counts.plot(kind='bar', ax=ax)
+    total_count = q28_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q29. 어떤 종류의 제품 업데이트를 받고 싶으신가요?
     st.header('Q29. 받고 싶은 제품 업데이트 종류')
     q29_counts = filtered_df['Q29'].value_counts()
-    st.bar_chart(q29_counts)
+    fig, ax = plt.subplots()
+    q29_counts.plot(kind='bar', ax=ax)
+    total_count = q29_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q30. 어떤 방법으로 미스터아빠의 이동형 상점으로부터 업데이트를 받고 싶으신가요?
     st.header('Q30. 제품 업데이트 방법 선호')
     q30_counts = filtered_df['Q30'].value_counts()
-    st.bar_chart(q30_counts)
+    fig, ax = plt.subplots()
+    q30_counts.plot(kind='bar', ax=ax)
+    total_count = q30_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q31. 언제 미스터아빠의 이동형 상점으로부터 커뮤니케이션을 받기를 원하시나요?
     st.header('Q31. 커뮤니케이션 받기를 원하는 시간')
     q31_counts = filtered_df['Q31'].value_counts()
-    st.bar_chart(q31_counts)
+    fig, ax = plt.subplots()
+    q31_counts.plot(kind='bar', ax=ax)
+    total_count = q31_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q32. 정기 배송을 위한 구독 서비스에 관심 있으신가요?
     st.header('Q32. 정기 배송 구독 서비스 관심 여부')
     q32_counts = filtered_df['Q32'].value_counts()
-    st.bar_chart(q32_counts)
+    fig, ax = plt.subplots()
+    q32_counts.plot(kind='bar', ax=ax)
+    total_count = q32_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
     # Q33. 모바일 상점 앱에서 가장 중요하게 생각하는 기능은 무엇인가요?
     st.header('Q33. 모바일 상점 앱에서 가장 중요하게 생각하는 기능')
     q33_counts = filtered_df['Q33'].value_counts()
-    st.bar_chart(q33_counts)
+    fig, ax = plt.subplots()
+    q33_counts.plot(kind='bar', ax=ax)
+    total_count = q33_counts.sum()
+    add_percentage(ax, total_count)
+    st.pyplot(fig)
 
 # 필터링된 데이터를 기반으로 시각화
 plot_data(filtered_df)
